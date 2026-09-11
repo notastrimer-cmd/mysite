@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>artemchik.site — Black Hole UI</title>
+  <title>artemchik.site - 😊</title>
   <style>
     :root {
-      --bg: #030206;
-      --card-bg: rgba(14, 15, 24, 0.6);
-      --card-border: rgba(168, 85, 247, 0.2);
-      --card-hover: rgba(216, 180, 254, 0.45);
-      --accent: #b052f7;
-      --glow-orange: #ff8438;
-      --text: #f8fafc;
-      --text-dim: #94a3b8;
+      --bg: #020205;
+      --card-bg: rgba(13, 14, 22, 0.58);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-glow: rgba(192, 132, 252, 0.4);
+      --accent-purple: #a855f7;
+      --accent-gold: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
     }
 
     * {
@@ -23,15 +23,15 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
       background-color: var(--bg);
-      color: var(--text);
+      color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Фуллскрин холст с чёрной дырой */
+    /* Холст с поддержкой 2K / Retina */
     #space-canvas {
       position: fixed;
       top: 0;
@@ -42,159 +42,177 @@
       pointer-events: none;
     }
 
-    /* Раскладка по краям экрана */
-    .hud-layout {
+    /* Расположение панелей по бокам */
+    .hud-wrapper {
       position: relative;
       z-index: 10;
       min-height: 100vh;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 40px 60px;
-      gap: 30px;
+      padding: 50px 70px;
+      gap: 40px;
+      box-sizing: border-box;
     }
 
-    .hud-column {
-      width: 380px;
+    .hud-col {
+      width: 400px;
       display: flex;
       flex-direction: column;
       gap: 24px;
+      flex-shrink: 0;
     }
 
-    /* Парящий эффект для боковых панелей */
-    .floating-left {
-      animation: floatSide 7s ease-in-out infinite alternate;
-    }
-    .floating-right {
-      animation: floatSide 8s ease-in-out infinite alternate-reverse;
+    /* Медленное, медитативное парение блоков */
+    .float-left {
+      animation: smoothFloatA 14s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
     }
 
-    @keyframes floatSide {
+    .float-right {
+      animation: smoothFloatB 16s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite alternate;
+    }
+
+    @keyframes smoothFloatA {
       0% { transform: translateY(0px); }
-      100% { transform: translateY(-12px); }
+      100% { transform: translateY(-16px); }
     }
 
-    /* Стеклянные карточки (Glassmorphism) */
-    .glass-panel {
+    @keyframes smoothFloatB {
+      0% { transform: translateY(-8px); }
+      100% { transform: translateY(10px); }
+    }
+
+    /* Стеклянные карточки высокой чёткости */
+    .glass-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 24px;
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transition: all 0.35s ease;
+      border-radius: 26px;
+      padding: 26px;
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.12);
+      transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.35s ease;
     }
 
-    .glass-panel:hover {
-      border-color: var(--card-hover);
-      box-shadow: 0 20px 50px rgba(176, 82, 247, 0.2),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    .glass-card:hover {
+      border-color: var(--card-border-glow);
+      box-shadow: 0 30px 60px -10px rgba(168, 85, 247, 0.18),
+                  inset 0 1px 1px rgba(255, 255, 255, 0.25);
     }
 
-    /* Верхний бейдж */
+    /* Бейдж онлайн/статус */
     .tag {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(176, 82, 247, 0.15);
+      background: rgba(168, 85, 247, 0.12);
       color: #e9d5ff;
-      border: 1px solid rgba(176, 82, 247, 0.4);
+      border: 1px solid rgba(168, 85, 247, 0.35);
       padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
+      border-radius: 30px;
+      font-size: 0.82rem;
       font-weight: 600;
-      letter-spacing: 0.8px;
-      margin-bottom: 14px;
+      letter-spacing: 0.6px;
+      margin-bottom: 16px;
     }
 
     .tag-pulse {
-      width: 8px;
-      height: 8px;
-      background: #4ade80;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      box-shadow: 0 0 10px #4ade80;
-      animation: pulse 2s infinite;
+      background: #34d399;
+      box-shadow: 0 0 10px #34d399;
+      animation: pulseDot 3s ease-in-out infinite;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.3); opacity: 0.6; }
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     h1 {
-      font-size: 1.9rem;
+      font-size: 2.1rem;
       line-height: 1.25;
-      margin-bottom: 12px;
       font-weight: 800;
-      background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #ffffff 40%, #e9d5ff 75%, #fbcfe8 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
     }
 
     .bio {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: var(--text-dim);
+      font-size: 0.98rem;
+      line-height: 1.65;
+      color: var(--text-muted);
     }
 
-    /* Питомцы */
-    .pet-card {
+    /* Карточка с питомцами */
+    .pet-panel {
       padding: 0;
       overflow: hidden;
     }
 
-    .pet-img-wrap {
+    .pet-img-box {
       width: 100%;
-      height: 240px;
+      height: 250px;
       position: relative;
       background: #000;
+      overflow: hidden;
     }
 
-    .pet-img-wrap img {
+    .pet-img-box img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.5s ease;
+      object-position: center;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     }
 
-    .pet-card:hover .pet-img-wrap img {
-      transform: scale(1.05);
+    .pet-panel:hover .pet-img-box img {
+      transform: scale(1.04);
     }
 
-    .pet-info {
-      padding: 16px 20px;
+    .pet-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(13, 14, 22, 0.9) 0%, transparent 50%);
+    }
+
+    .pet-caption {
+      padding: 18px 24px;
     }
 
     .pet-name {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
 
-    .pet-desc {
-      font-size: 0.85rem;
-      color: var(--text-dim);
+    .pet-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
     }
 
-    /* Правая колонка: Проекты */
-    .section-title {
-      font-size: 1.25rem;
+    /* Правая панель проектов */
+    .section-label {
+      font-size: 1.3rem;
       font-weight: 700;
+      letter-spacing: -0.3px;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .section-title::before {
+    .section-label::before {
       content: '';
       width: 4px;
       height: 18px;
-      background: #c084fc;
       border-radius: 4px;
-      box-shadow: 0 0 10px #c084fc;
+      background: linear-gradient(to bottom, #c084fc, #9333ea);
+      box-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
     }
 
     .project-link {
@@ -202,90 +220,77 @@
       justify-content: space-between;
       align-items: center;
       text-decoration: none;
-      color: var(--text);
-      padding: 18px 20px;
+      color: var(--text-main);
+      padding: 22px 24px;
+      border-radius: 22px;
       position: relative;
       overflow: hidden;
     }
 
-    .project-link::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 3px;
-      height: 100%;
-      background: var(--accent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .project-link:hover::after {
-      opacity: 1;
-    }
-
     .project-link:hover {
-      transform: translateX(-4px);
+      transform: translateX(-5px);
     }
 
-    .project-header {
+    .project-title-row {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
+      gap: 12px;
+      margin-bottom: 6px;
     }
 
-    .project-meta h3 {
-      font-size: 1.05rem;
+    .project-title {
+      font-size: 1.1rem;
       font-weight: 600;
     }
 
-    .project-meta p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
+    .project-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
     }
 
     .badge {
-      font-size: 0.72rem;
-      padding: 2px 8px;
-      border-radius: 12px;
-      background: rgba(168, 85, 247, 0.2);
-      color: #e9d5ff;
-      border: 1px solid rgba(168, 85, 247, 0.3);
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(168, 85, 247, 0.18);
+      color: #f3e8ff;
+      border: 1px solid rgba(192, 132, 252, 0.35);
       font-weight: 600;
+      letter-spacing: 0.3px;
     }
 
     .arrow {
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       color: #c084fc;
-      transition: transform 0.2s;
-      margin-left: 12px;
+      transition: transform 0.3s ease, color 0.3s ease;
+      margin-left: 14px;
     }
 
     .project-link:hover .arrow {
-      transform: translateX(4px);
-      color: #fff;
+      transform: translateX(6px);
+      color: #ffffff;
     }
 
     footer {
-      font-size: 0.8rem;
-      color: rgba(148, 163, 184, 0.6);
+      font-size: 0.82rem;
+      color: rgba(148, 163, 184, 0.5);
       text-align: center;
-      padding: 12px;
+      padding: 10px;
     }
 
-    /* Адаптив под планшеты и мобилки */
-    @media (max-width: 1024px) {
-      .hud-layout {
+    /* Адаптивность для экранов < 1100px */
+    @media (max-width: 1100px) {
+      .hud-wrapper {
         flex-direction: column;
         justify-content: center;
-        padding: 30px 16px;
+        padding: 40px 20px;
+        gap: 30px;
       }
-      .hud-column {
+      .hud-col {
         width: 100%;
-        max-width: 540px;
+        max-width: 500px;
       }
-      .floating-left, .floating-right {
+      .float-left, .float-right {
         animation: none;
       }
     }
@@ -293,170 +298,251 @@
 </head>
 <body>
 
-  <!-- Фон: Анимированная чёрная дыра и притягивающиеся звёзды -->
+  <!-- Высокочёткий Canvas (2K/4K/Retina) -->
   <canvas id="space-canvas"></canvas>
 
-  <div class="hud-layout">
+  <div class="hud-wrapper">
     <!-- Левая колонка: Профиль и питомцы -->
-    <div class="hud-column floating-left">
-      <div class="glass-panel">
+    <div class="hud-col float-left">
+      <div class="glass-card">
         <div class="tag">
           <span class="tag-pulse"></span>
           artemchik.site
         </div>
         <h1>Привет! Я Артём</h1>
         <p class="bio">
-          Люблю вайбкодинг, PyCharm и космическую эстетику. Все проекты в открытом доступе справа.
+          Занимаюсь вайбкодингом, разработкой в PyCharm и любуюсь космосом. 
+          Мои проекты собраны на панели справа.
         </p>
       </div>
 
-      <div class="glass-panel pet-card">
-        <div class="pet-img-wrap">
+      <div class="glass-card pet-panel">
+        <div class="pet-img-box">
           <img src="pets.jpg" alt="Тая и Плюша" />
+          <div class="pet-overlay"></div>
         </div>
-        <div class="pet-info">
+        <div class="pet-caption">
           <div class="pet-name">Тая и Плюша</div>
-          <div class="pet-desc">Мои космические компаньоны</div>
+          <div class="pet-sub">Мои пушистые компаньоны</div>
         </div>
       </div>
     </div>
 
-    <!-- Правая колонка: Проекты и ссылки -->
-    <div class="hud-column floating-right">
-      <div class="section-title">Проекты и релизы</div>
-      
-      <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="glass-panel project-link">
-        <div class="project-meta">
-          <div class="project-header">
-            <h3>Премиум автокликер</h3>
+    <!-- Правая колонка: Проекты -->
+    <div class="hud-col float-right">
+      <div class="section-label">Проекты и релизы</div>
+
+      <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="glass-card project-link">
+        <div>
+          <div class="project-title-row">
+            <div class="project-title">Премиум автокликер</div>
             <span class="badge">1 мс</span>
           </div>
-          <p>Скачать с Google Drive (прямой линк)</p>
+          <div class="project-desc">Прямое скачивание с Google Drive</div>
         </div>
         <span class="arrow">&rarr;</span>
       </a>
 
-      <div class="glass-panel footer-card">
+      <div class="glass-card">
         <footer>
-          artemchik.site &bull; Singularity Engine
+          artemchik.site &bull; Event Horizon v2.0
         </footer>
       </div>
     </div>
   </div>
 
-  <!-- Движок чёрной дыры на HTML5 Canvas -->
   <script>
     const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
 
+    let dpr = window.devicePixelRatio || 1;
     let w, h, cx, cy;
-    let particles = [];
-    const PARTICLE_COUNT = 280;
-    let rotationAngle = 0;
+    let time = 0;
 
-    function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
+    // Частицы аккреционного вихря
+    const DUST_COUNT = 340;
+    const dustParticles = [];
+
+    // Фоновые неподвижные звёзды высокой чёткости
+    const STAR_COUNT = 180;
+    const staticStars = [];
+
+    function setupCanvas() {
+      dpr = Math.max(window.devicePixelRatio || 1, 2); // Гарантируем чёткость не ниже 2K/HiDPI
+      w = window.innerWidth;
+      h = window.innerHeight;
+
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+
+      ctx.scale(dpr, dpr);
+
       cx = w / 2;
       cy = h / 2;
     }
 
-    class Particle {
-      constructor() {
-        this.reset(true);
+    function initUniverse() {
+      staticStars.length = 0;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        staticStars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: Math.random() * 1.2 + 0.3,
+          baseAlpha: Math.random() * 0.6 + 0.2,
+          speed: Math.random() * 0.003 + 0.001,
+          phase: Math.random() * Math.PI * 2
+        });
       }
-      reset(initial = false) {
-        this.dist = initial ? Math.random() * (Math.max(w, h) * 0.7) + 90 : Math.max(w, h) * 0.6;
-        this.angle = Math.random() * Math.PI * 2;
-        this.speed = Math.random() * 0.6 + 0.3;
-        this.size = Math.random() * 1.8 + 0.5;
-        this.color = Math.random() > 0.4 ? '#c084fc' : '#ffaa44';
-      }
-      update() {
-        // Спиральное затягивание в сингулярность
-        this.dist -= this.speed * (1 + 180 / (this.dist + 10));
-        this.angle += 0.008 + 1.8 / (this.dist + 20);
 
-        if (this.dist < 75) {
-          this.reset();
-        }
+      dustParticles.length = 0;
+      for (let i = 0; i < DUST_COUNT; i++) {
+        dustParticles.push(createDustParticle(true));
       }
-      draw() {
-        // Проекция эллипса (эффект наклона диска)
-        const x = cx + Math.cos(this.angle) * this.dist;
-        const y = cy + Math.sin(this.angle) * (this.dist * 0.42);
+    }
 
-        ctx.fillStyle = this.color;
+    function createDustParticle(randomInit = false) {
+      const minRadius = 90;
+      const maxRadius = Math.min(w, h) * 0.46;
+      return {
+        dist: randomInit ? minRadius + Math.random() * (maxRadius - minRadius) : maxRadius,
+        angle: Math.random() * Math.PI * 2,
+        speed: (Math.random() * 0.12 + 0.08) * 0.55, // Замедленное, плавное движение
+        size: Math.random() * 1.6 + 0.4,
+        colorType: Math.random()
+      };
+    }
+
+    function drawStaticStars() {
+      staticStars.forEach(s => {
+        s.phase += s.speed;
+        const currentAlpha = s.baseAlpha + Math.sin(s.phase) * 0.25;
+        ctx.fillStyle = `rgba(240, 243, 255, ${Math.max(0.1, currentAlpha)})`;
         ctx.beginPath();
-        ctx.arc(x, y, this.size, 0, Math.PI * 2);
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
         ctx.fill();
-      }
+      });
     }
 
-    function init() {
-      resize();
-      particles = [];
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle());
-      }
-    }
+    function renderFrame() {
+      time += 0.0035; // Медленный ход времени
 
-    function render() {
-      ctx.fillStyle = 'rgba(3, 2, 6, 0.3)';
+      // Мягкое очищение с глубоким космическим градиентом
+      ctx.fillStyle = 'rgba(2, 2, 5, 0.45)';
       ctx.fillRect(0, 0, w, h);
 
-      rotationAngle += 0.015;
+      drawStaticStars();
 
-      // 1. Внешнее свечение
-      const outerGlow = ctx.createRadialGradient(cx, cy, 60, cx, cy, 320);
-      outerGlow.addColorStop(0, 'rgba(168, 85, 247, 0.4)');
-      outerGlow.addColorStop(0.3, 'rgba(255, 120, 40, 0.25)');
-      outerGlow.addColorStop(1, 'transparent');
-      ctx.fillStyle = outerGlow;
+      // Центр чёрной дыры
+      const rHole = Math.min(w, h) * 0.105; // Радиус горизонта событий
+
+      // 1. Внешнее гравитационное рассеивание (Corona Glow)
+      const corona = ctx.createRadialGradient(cx, cy, rHole, cx, cy, rHole * 3.8);
+      corona.addColorStop(0, 'rgba(216, 180, 254, 0.25)');
+      corona.addColorStop(0.25, 'rgba(245, 158, 11, 0.18)');
+      corona.addColorStop(0.65, 'rgba(126, 34, 206, 0.08)');
+      corona.addColorStop(1, 'transparent');
+      ctx.fillStyle = corona;
       ctx.beginPath();
-      ctx.arc(cx, cy, 320, 0, Math.PI * 2);
+      ctx.arc(cx, cy, rHole * 3.8, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Отрисовка затягивающихся частиц
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-
-      // 3. Аккреционный диск (пылающий овал)
+      // 2. Верхняя арка гравитационного линзирования (эффект искривления пространства)
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(-0.18);
-      ctx.scale(1, 0.38);
+      ctx.rotate(-0.06);
 
-      const diskGrad = ctx.createRadialGradient(0, 0, 70, 0, 0, 260);
-      diskGrad.addColorStop(0, '#ffffff');
-      diskGrad.addColorStop(0.2, '#ffa347');
-      diskGrad.addColorStop(0.55, '#c026d3');
-      diskGrad.addColorStop(0.85, 'rgba(112, 26, 230, 0.4)');
-      diskGrad.addColorStop(1, 'transparent');
+      const lensGrad = ctx.createRadialGradient(0, 0, rHole * 0.95, 0, 0, rHole * 1.85);
+      lensGrad.addColorStop(0, 'transparent');
+      lensGrad.addColorStop(0.2, 'rgba(255, 235, 190, 0.85)');
+      lensGrad.addColorStop(0.5, 'rgba(245, 158, 11, 0.5)');
+      lensGrad.addColorStop(0.85, 'rgba(168, 85, 247, 0.2)');
+      lensGrad.addColorStop(1, 'transparent');
 
-      ctx.fillStyle = diskGrad;
+      ctx.fillStyle = lensGrad;
       ctx.beginPath();
-      ctx.arc(0, 0, 260, 0, Math.PI * 2);
+      ctx.ellipse(0, -rHole * 0.18, rHole * 1.8, rHole * 1.5, 0, Math.PI * 1.05, Math.PI * 1.95);
       ctx.fill();
       ctx.restore();
 
-      // 4. Горизонт событий (абсолютная тень сингулярности)
-      ctx.fillStyle = '#000000';
-      ctx.shadowColor = '#ffffff';
-      ctx.shadowBlur = 14;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 76, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.shadowBlur = 0;
+      // 3. Аккреционный диск (закручивающиеся частицы и газ)
+      dustParticles.forEach((p, idx) => {
+        p.dist -= p.speed * (1 + 110 / (p.dist + 15));
+        p.angle += (0.0035 + 0.45 / (p.dist + 20)); // Медленная угловая скорость
 
-      requestAnimationFrame(render);
+        if (p.dist < rHole * 0.88) {
+          dustParticles[idx] = createDustParticle(false);
+          return;
+        }
+
+        // Проекция наклона диска к зрителю
+        const tilt = 0.32;
+        const x = cx + Math.cos(p.angle) * p.dist;
+        const y = cy + Math.sin(p.angle) * (p.dist * tilt);
+
+        // Доплеровское смещение: приближающаяся часть ярче и теплее
+        const doppler = (Math.sin(p.angle) + 1) * 0.5;
+        let color;
+        if (p.colorType > 0.4) {
+          color = `rgba(255, ${Math.floor(200 + doppler * 55)}, ${Math.floor(120 + doppler * 100)}, ${0.45 + doppler * 0.45})`;
+        } else {
+          color = `rgba(192, 132, 252, ${0.35 + doppler * 0.4})`;
+        }
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 4. Передняя светящаяся кромка диска
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-0.06);
+      ctx.scale(1, 0.32);
+
+      const frontDisk = ctx.createRadialGradient(0, 0, rHole * 0.9, 0, 0, rHole * 2.8);
+      frontDisk.addColorStop(0, '#ffffff');
+      frontDisk.addColorStop(0.18, 'rgba(255, 210, 140, 0.95)');
+      frontDisk.addColorStop(0.48, 'rgba(217, 70, 239, 0.65)');
+      frontDisk.addColorStop(0.8, 'rgba(126, 34, 206, 0.2)');
+      frontDisk.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = frontDisk;
+      ctx.beginPath();
+      ctx.arc(0, 0, rHole * 2.8, 0, Math.PI);
+      ctx.fill();
+      ctx.restore();
+
+      // 5. Фотонная сфера и Горизонт событий (Абсолютная сингулярность)
+      // Внутреннее свечение кромки
+      ctx.save();
+      ctx.shadowColor = 'rgba(255, 255, 255, 0.9)';
+      ctx.shadowBlur = 16;
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(cx, cy, rHole, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // Тень горизонта событий (поглощает всё)
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.arc(cx, cy, rHole * 0.98, 0, Math.PI * 2);
+      ctx.fill();
+
+      requestAnimationFrame(renderFrame);
     }
 
-    window.addEventListener('resize', resize);
-    init();
-    render();
+    window.addEventListener('resize', () => {
+      setupCanvas();
+      initUniverse();
+    });
+
+    setupCanvas();
+    initUniverse();
+    renderFrame();
   </script>
 </body>
 </html>
