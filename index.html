@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>artemchik.site</title>
+  <style>
+    :root {
+      --bg-color: #1e1f22;
+      --card-bg: #2b2d30;
+      --accent-color: #7b61ff;
+      --accent-hover: #9b87ff;
+      --text-main: #f0f3f6;
+      --text-muted: #9aa0a6;
+      --border-color: #393b40;
+      --badge-bg: rgba(123, 97, 255, 0.2);
+      --badge-color: #bfaaff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: rgba(123, 97, 255, 0.15);
+      color: var(--accent-hover);
+      border: 1px solid var(--accent-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      line-height: 1.3;
+      margin-bottom: 14px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .bio {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .pets-section {
+      margin-bottom: 40px;
+    }
+
+    .pet-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .pet-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-color);
+    }
+
+    .pet-img-wrap {
+      width: 100%;
+      height: 420px;
+      overflow: hidden;
+      background: #141416;
+    }
+
+    .pet-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transition: transform 0.3s ease;
+    }
+
+    .pet-card:hover .pet-img-wrap img {
+      transform: scale(1.02);
+    }
+
+    .pet-info {
+      padding: 18px 22px;
+    }
+
+    .pet-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .pet-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .projects-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .project-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .project-link:hover {
+      border-color: var(--accent-color);
+      background: #32353a;
+      transform: translateX(4px);
+    }
+
+    .project-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .project-meta h3 {
+      font-size: 1.05rem;
+    }
+
+    .project-meta p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+      border: 1px solid rgba(123, 97, 255, 0.4);
+      font-weight: 600;
+    }
+
+    .arrow {
+      font-size: 1.2rem;
+      color: var(--accent-hover);
+      transition: transform 0.2s ease;
+      margin-left: 16px;
+    }
+
+    .project-link:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <span class="tag">artemchik.site</span>
+      <h1>Привет! Меня зовут Артём</h1>
+      <p class="bio">
+        Я люблю вайбкодинг, PyCharm и свою кошку Таю и собачку Плюшу. 
+        Ниже мои проекты, ссылка прямая.
+      </p>
+    </header>
+
+    <section class="pets-section">
+      <div class="pet-card">
+        <div class="pet-img-wrap">
+          <img src="pets.jpg" alt="Тая и Плюша" />
+        </div>
+        <div class="pet-info">
+          <div class="pet-name">Тая и Плюша</div>
+          <div class="pet-desc">Мои домашние питомцы</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-section">
+      <h2 class="section-title">Мои проекты</h2>
+      <div class="projects-list">
+        
+        <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="project-link">
+          <div class="project-meta">
+            <div class="project-header">
+              <h3>Премиум автокликер</h3>
+              <span class="badge">Точность 1 мс</span>
+            </div>
+            <p>Прямое скачивание с Google Drive</p>
+          </div>
+          <span class="arrow">&rarr;</span>
+        </a>
+
+      </div>
+    </section>
+
+    <footer>
+      artemchik.site
+    </footer>
+  </div>
+
+</body>
+</html>
