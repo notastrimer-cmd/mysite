@@ -6,14 +6,14 @@
   <title>artemchik.site</title>
   <style>
     :root {
-      --bg-base: #030307;
-      --card-bg: rgba(18, 19, 26, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover-border: rgba(168, 85, 247, 0.45);
-      --accent-purple: #9d4edd;
-      --accent-glow: #e0a96d;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg: #030206;
+      --card-bg: rgba(14, 15, 24, 0.6);
+      --card-border: rgba(168, 85, 247, 0.2);
+      --card-hover: rgba(216, 180, 254, 0.45);
+      --accent: #b052f7;
+      --glow-orange: #ff8438;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
     }
 
     * {
@@ -23,246 +23,166 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, sans-serif;
-      background-color: var(--bg-base);
-      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
       position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 50px 20px;
     }
 
-    /* === Сцена с чёрной дырой и звёздами === */
-    .space-background {
+    /* Фуллскрин холст с чёрной дырой */
+    #space-canvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      z-index: -2;
-      overflow: hidden;
-      background: radial-gradient(circle at center, #0b071a 0%, #030307 100%);
-    }
-
-    #starfield {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-    }
-
-    /* Чёрная дыра по центру */
-    .black-hole-container {
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 600px;
-      height: 600px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      z-index: 1;
       pointer-events: none;
-      z-index: -1;
-      opacity: 0.85;
-      filter: blur(0.2px);
     }
 
-    /* Аккреционный диск */
-    .accretion-disk {
-      position: absolute;
-      width: 540px;
-      height: 140px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center, 
-        rgba(255, 255, 255, 0.95) 0%, 
-        rgba(255, 204, 112, 0.9) 25%, 
-        rgba(247, 37, 133, 0.6) 55%, 
-        rgba(114, 9, 183, 0.3) 75%, 
-        transparent 100%);
-      box-shadow: 
-        0 0 60px rgba(255, 170, 50, 0.5),
-        0 0 120px rgba(181, 23, 158, 0.4);
-      transform: rotate(-14deg) scaleY(0.7);
-      animation: disk-glow 8s ease-in-out infinite alternate;
-    }
-
-    /* Гравитационное кольцо линзирования */
-    .gravitational-lensing {
-      position: absolute;
-      width: 250px;
-      height: 250px;
-      border-radius: 50%;
-      border: 3px solid rgba(255, 215, 130, 0.8);
-      box-shadow: 
-        0 0 50px 10px rgba(247, 127, 0, 0.7),
-        0 0 90px 25px rgba(114, 9, 183, 0.6),
-        inset 0 0 40px rgba(255, 230, 150, 0.4);
-      animation: rotate-ring 35s linear infinite;
-    }
-
-    /* Горизонт событий */
-    .event-horizon {
-      position: absolute;
-      width: 175px;
-      height: 175px;
-      border-radius: 50%;
-      background: #000;
-      box-shadow: 
-        0 0 25px 8px #000,
-        0 0 4px 2px rgba(255, 255, 255, 0.6);
-      z-index: 2;
-    }
-
-    @keyframes rotate-ring {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    @keyframes disk-glow {
-      0% { filter: brightness(1) drop-shadow(0 0 20px rgba(255, 150, 50, 0.4)); }
-      100% { filter: brightness(1.25) drop-shadow(0 0 45px rgba(255, 100, 150, 0.6)); }
-    }
-
-    /* === Контентная часть === */
-    .container {
-      max-width: 680px;
-      width: 100%;
+    /* Раскладка по краям экрана */
+    .hud-layout {
       position: relative;
       z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 60px;
+      gap: 30px;
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 40px;
+    .hud-column {
+      width: 380px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
+    /* Парящий эффект для боковых панелей */
+    .floating-left {
+      animation: floatSide 7s ease-in-out infinite alternate;
+    }
+    .floating-right {
+      animation: floatSide 8s ease-in-out infinite alternate-reverse;
+    }
+
+    @keyframes floatSide {
+      0% { transform: translateY(0px); }
+      100% { transform: translateY(-12px); }
+    }
+
+    /* Стеклянные карточки (Glassmorphism) */
+    .glass-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.35s ease;
+    }
+
+    .glass-panel:hover {
+      border-color: var(--card-hover);
+      box-shadow: 0 20px 50px rgba(176, 82, 247, 0.2),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    /* Верхний бейдж */
     .tag {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(157, 78, 221, 0.12);
-      color: #d8b4fe;
-      border: 1px solid rgba(168, 85, 247, 0.3);
-      padding: 6px 16px;
-      border-radius: 30px;
-      font-size: 0.82rem;
+      gap: 8px;
+      background: rgba(176, 82, 247, 0.15);
+      color: #e9d5ff;
+      border: 1px solid rgba(176, 82, 247, 0.4);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
       font-weight: 600;
-      margin-bottom: 20px;
       letter-spacing: 0.8px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(157, 78, 221, 0.2);
+      margin-bottom: 14px;
     }
 
     .tag-pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
+      width: 8px;
+      height: 8px;
       background: #4ade80;
-      box-shadow: 0 0 8px #4ade80;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #4ade80;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 1.9rem;
       line-height: 1.25;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       font-weight: 800;
-      background: linear-gradient(135deg, #ffffff 30%, #e9d5ff 70%, #fbcfe8 100%);
+      background: linear-gradient(135deg, #fff 40%, #c084fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
     .bio {
-      font-size: 1.05rem;
-      line-height: 1.65;
-      color: var(--text-muted);
-      max-width: 580px;
-      margin: 0 auto;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-dim);
     }
 
-    /* === Карточка питомцев === */
-    .pets-section {
-      margin-bottom: 45px;
-    }
-
+    /* Питомцы */
     .pet-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
+      padding: 0;
       overflow: hidden;
-      box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(14px);
-      transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .pet-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--card-hover-border);
-      box-shadow: 0 20px 45px -5px rgba(157, 78, 221, 0.25);
     }
 
     .pet-img-wrap {
       width: 100%;
-      height: 420px;
-      overflow: hidden;
+      height: 240px;
       position: relative;
-      background: rgba(10, 10, 15, 0.5);
+      background: #000;
     }
 
     .pet-img-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
       transition: transform 0.5s ease;
     }
 
     .pet-card:hover .pet-img-wrap img {
-      transform: scale(1.03);
-    }
-
-    .pet-img-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 80px;
-      background: linear-gradient(to top, rgba(18, 19, 26, 0.95), transparent);
+      transform: scale(1.05);
     }
 
     .pet-info {
-      padding: 20px 26px;
+      padding: 16px 20px;
     }
 
     .pet-name {
-      font-size: 1.25rem;
+      font-size: 1.1rem;
       font-weight: 700;
-      margin-bottom: 4px;
-      color: #fff;
+      margin-bottom: 2px;
     }
 
     .pet-desc {
-      color: var(--text-muted);
-      font-size: 0.95rem;
+      font-size: 0.85rem;
+      color: var(--text-dim);
     }
 
-    /* === Секция проектов === */
-    .projects-section {
-      margin-bottom: 40px;
-    }
-
+    /* Правая колонка: Проекты */
     .section-title {
-      font-size: 1.35rem;
-      margin-bottom: 18px;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
+      margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -270,250 +190,273 @@
 
     .section-title::before {
       content: '';
-      display: inline-block;
       width: 4px;
-      height: 20px;
-      background: linear-gradient(to bottom, #c084fc, #9333ea);
+      height: 18px;
+      background: #c084fc;
       border-radius: 4px;
-    }
-
-    .projects-list {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      box-shadow: 0 0 10px #c084fc;
     }
 
     .project-link {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 20px 24px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      color: var(--text-main);
       text-decoration: none;
-      backdrop-filter: blur(14px);
-      transition: all 0.3s ease;
+      color: var(--text);
+      padding: 18px 20px;
       position: relative;
       overflow: hidden;
     }
 
-    .project-link::before {
+    .project-link::after {
       content: '';
       position: absolute;
-      top: 0;
       left: 0;
-      width: 100%;
+      top: 0;
+      width: 3px;
       height: 100%;
-      background: radial-gradient(circle at 10% 50%, rgba(168, 85, 247, 0.12), transparent 60%);
+      background: var(--accent);
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.3s;
+    }
+
+    .project-link:hover::after {
+      opacity: 1;
     }
 
     .project-link:hover {
-      border-color: var(--card-hover-border);
-      transform: translateX(5px);
-      box-shadow: 0 12px 30px -5px rgba(157, 78, 221, 0.2);
-    }
-
-    .project-link:hover::before {
-      opacity: 1;
+      transform: translateX(-4px);
     }
 
     .project-header {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
+      gap: 10px;
+      margin-bottom: 4px;
     }
 
     .project-meta h3 {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 600;
     }
 
     .project-meta p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+      font-size: 0.85rem;
+      color: var(--text-dim);
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      font-size: 0.75rem;
-      padding: 3px 9px;
-      border-radius: 20px;
-      background: rgba(168, 85, 247, 0.15);
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(168, 85, 247, 0.2);
       color: #e9d5ff;
-      border: 1px solid rgba(192, 132, 252, 0.35);
+      border: 1px solid rgba(168, 85, 247, 0.3);
       font-weight: 600;
     }
 
     .arrow {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       color: #c084fc;
-      transition: transform 0.25s ease, color 0.2s ease;
-      margin-left: 16px;
+      transition: transform 0.2s;
+      margin-left: 12px;
     }
 
     .project-link:hover .arrow {
-      transform: translateX(6px);
-      color: #f3e8ff;
+      transform: translateX(4px);
+      color: #fff;
     }
 
     footer {
-      text-align: center;
+      font-size: 0.8rem;
       color: rgba(148, 163, 184, 0.6);
-      font-size: 0.85rem;
-      margin-top: 20px;
-      padding-top: 24px;
-      border-top: 1px solid var(--card-border);
+      text-align: center;
+      padding: 12px;
     }
 
-    @media (max-width: 640px) {
-      body {
+    /* Адаптив под планшеты и мобилки */
+    @media (max-width: 1024px) {
+      .hud-layout {
+        flex-direction: column;
+        justify-content: center;
         padding: 30px 16px;
       }
-      h1 {
-        font-size: 2rem;
+      .hud-column {
+        width: 100%;
+        max-width: 540px;
       }
-      .pet-img-wrap {
-        height: 320px;
-      }
-      .black-hole-container {
-        width: 380px;
-        height: 380px;
-      }
-      .accretion-disk {
-        width: 360px;
-        height: 90px;
-      }
-      .gravitational-lensing {
-        width: 170px;
-        height: 170px;
-      }
-      .event-horizon {
-        width: 120px;
-        height: 120px;
+      .floating-left, .floating-right {
+        animation: none;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- Фон: Звёздное поле и Чёрная дыра -->
-  <div class="space-background">
-    <canvas id="starfield"></canvas>
-    <div class="black-hole-container">
-      <div class="accretion-disk"></div>
-      <div class="gravitational-lensing"></div>
-      <div class="event-horizon"></div>
-    </div>
-  </div>
+  <!-- Фон: Анимированная чёрная дыра и притягивающиеся звёзды -->
+  <canvas id="space-canvas"></canvas>
 
-  <div class="container">
-    <header>
-      <div class="tag">
-        <span class="tag-pulse"></span>
-        artemchik.site
+  <div class="hud-layout">
+    <!-- Левая колонка: Профиль и питомцы -->
+    <div class="hud-column floating-left">
+      <div class="glass-panel">
+        <div class="tag">
+          <span class="tag-pulse"></span>
+          artemchik.site
+        </div>
+        <h1>Привет! Я Артём</h1>
+        <p class="bio">
+          Люблю вайбкодинг, PyCharm и космическую эстетику. Все проекты в открытом доступе справа.
+        </p>
       </div>
-      <h1>Привет! Меня зовут Артём</h1>
-      <p class="bio">
-        Я люблю вайбкодинг, PyCharm и свою кошку Таю и собачку Плюшу. 
-        Ниже мои проекты, ссылка прямая.
-      </p>
-    </header>
 
-    <section class="pets-section">
-      <div class="pet-card">
+      <div class="glass-panel pet-card">
         <div class="pet-img-wrap">
           <img src="pets.jpg" alt="Тая и Плюша" />
-          <div class="pet-img-overlay"></div>
         </div>
         <div class="pet-info">
           <div class="pet-name">Тая и Плюша</div>
-          <div class="pet-desc">Мои домашние питомцы</div>
+          <div class="pet-desc">Мои космические компаньоны</div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section class="projects-section">
-      <h2 class="section-title">Мои проекты</h2>
-      <div class="projects-list">
-        
-        <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="project-link">
-          <div class="project-meta">
-            <div class="project-header">
-              <h3>Премиум автокликер</h3>
-              <span class="badge">Точность 1 мс</span>
-            </div>
-            <p>Прямое скачивание с Google Drive</p>
+    <!-- Правая колонка: Проекты и ссылки -->
+    <div class="hud-column floating-right">
+      <div class="section-title">Проекты и релизы</div>
+      
+      <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="glass-panel project-link">
+        <div class="project-meta">
+          <div class="project-header">
+            <h3>Премиум автокликер</h3>
+            <span class="badge">1 мс</span>
           </div>
-          <span class="arrow">&rarr;</span>
-        </a>
+          <p>Скачать с Google Drive (прямой линк)</p>
+        </div>
+        <span class="arrow">&rarr;</span>
+      </a>
 
+      <div class="glass-panel footer-card">
+        <footer>
+          artemchik.site &bull; Singularity Engine
+        </footer>
       </div>
-    </section>
-
-    <footer>
-      &copy; artemchik.site
-    </footer>
+    </div>
   </div>
 
-  <!-- Скрипт для живых мерцающих звёзд -->
+  <!-- Движок чёрной дыры на HTML5 Canvas -->
   <script>
-    const canvas = document.getElementById('starfield');
+    const canvas = document.getElementById('space-canvas');
     const ctx = canvas.getContext('2d');
 
-    let stars = [];
-    const numStars = 120;
+    let w, h, cx, cy;
+    let particles = [];
+    const PARTICLE_COUNT = 280;
+    let rotationAngle = 0;
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      cx = w / 2;
+      cy = h / 2;
     }
 
-    function initStars() {
-      stars = [];
-      for (let i = 0; i < numStars; i++) {
-        stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: Math.random() * 1.4 + 0.3,
-          alpha: Math.random() * 0.7 + 0.3,
-          speed: Math.random() * 0.015 + 0.005,
-          phase: Math.random() * Math.PI * 2
-        });
+    class Particle {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.dist = initial ? Math.random() * (Math.max(w, h) * 0.7) + 90 : Math.max(w, h) * 0.6;
+        this.angle = Math.random() * Math.PI * 2;
+        this.speed = Math.random() * 0.6 + 0.3;
+        this.size = Math.random() * 1.8 + 0.5;
+        this.color = Math.random() > 0.4 ? '#c084fc' : '#ffaa44';
+      }
+      update() {
+        // Спиральное затягивание в сингулярность
+        this.dist -= this.speed * (1 + 180 / (this.dist + 10));
+        this.angle += 0.008 + 1.8 / (this.dist + 20);
+
+        if (this.dist < 75) {
+          this.reset();
+        }
+      }
+      draw() {
+        // Проекция эллипса (эффект наклона диска)
+        const x = cx + Math.cos(this.angle) * this.dist;
+        const y = cy + Math.sin(this.angle) * (this.dist * 0.42);
+
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(x, y, this.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      stars.forEach(star => {
-        star.phase += star.speed;
-        const currentAlpha = 0.2 + (Math.sin(star.phase) + 1) * 0.4 * star.alpha;
-
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(230, 235, 255, ${currentAlpha})`;
-        ctx.shadowBlur = star.radius * 2;
-        ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
-        ctx.fill();
-      });
-
-      requestAnimationFrame(animateStars);
+    function init() {
+      resize();
+      particles = [];
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle());
+      }
     }
 
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      initStars();
-    });
+    function render() {
+      ctx.fillStyle = 'rgba(3, 2, 6, 0.3)';
+      ctx.fillRect(0, 0, w, h);
 
-    resizeCanvas();
-    initStars();
-    animateStars();
+      rotationAngle += 0.015;
+
+      // 1. Внешнее свечение
+      const outerGlow = ctx.createRadialGradient(cx, cy, 60, cx, cy, 320);
+      outerGlow.addColorStop(0, 'rgba(168, 85, 247, 0.4)');
+      outerGlow.addColorStop(0.3, 'rgba(255, 120, 40, 0.25)');
+      outerGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = outerGlow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 320, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Отрисовка затягивающихся частиц
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      // 3. Аккреционный диск (пылающий овал)
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(-0.18);
+      ctx.scale(1, 0.38);
+
+      const diskGrad = ctx.createRadialGradient(0, 0, 70, 0, 0, 260);
+      diskGrad.addColorStop(0, '#ffffff');
+      diskGrad.addColorStop(0.2, '#ffa347');
+      diskGrad.addColorStop(0.55, '#c026d3');
+      diskGrad.addColorStop(0.85, 'rgba(112, 26, 230, 0.4)');
+      diskGrad.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = diskGrad;
+      ctx.beginPath();
+      ctx.arc(0, 0, 260, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 4. Горизонт событий (абсолютная тень сингулярности)
+      ctx.fillStyle = '#000000';
+      ctx.shadowColor = '#ffffff';
+      ctx.shadowBlur = 14;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 76, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      requestAnimationFrame(render);
+    }
+
+    window.addEventListener('resize', resize);
+    init();
+    render();
   </script>
 </body>
 </html>
