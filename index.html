@@ -7,9 +7,10 @@
   <style>
     :root {
       --bg: #000002;
-      --card-bg: rgba(10, 10, 16, 0.52);
+      --card-bg: rgba(10, 10, 16, 0.65);
       --card-border: rgba(255, 255, 255, 0.08);
       --card-hover: rgba(245, 158, 11, 0.4);
+      --accent: #f59e0b;
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -39,14 +40,66 @@
       pointer-events: none;
     }
 
-    .hud-wrapper {
+    /* Верхняя навигация */
+    .top-nav-bar {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      background: rgba(10, 10, 16, 0.85);
+      border: 1px solid var(--card-border);
+      padding: 6px;
+      border-radius: 30px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 22px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .nav-btn.active {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fed7aa;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+
+    .nav-btn:hover:not(.active) {
+      color: #fff;
+    }
+
+    /* Контейнеры страниц */
+    .tab-content {
+      display: none;
       position: relative;
       z-index: 10;
       min-height: 100vh;
+      padding-top: 85px;
+    }
+
+    .tab-content.active {
       display: flex;
+    }
+
+    /* Главная страница */
+    #tab-home {
       justify-content: space-between;
       align-items: center;
-      padding: 50px 70px;
+      padding-left: 70px;
+      padding-right: 70px;
+      padding-bottom: 50px;
       gap: 40px;
     }
 
@@ -257,11 +310,116 @@
       padding: 8px;
     }
 
+    /* Вкладка Галерея */
+    #tab-gallery {
+      flex-direction: column;
+      align-items: center;
+      padding: 100px 24px 60px;
+      width: 100%;
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    .gallery-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .gallery-header p {
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+      width: 100%;
+    }
+
+    .gallery-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-6px);
+      border-color: var(--card-hover);
+      box-shadow: 0 15px 35px rgba(245, 158, 11, 0.18);
+    }
+
+    .gallery-item-img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      display: block;
+      background: #0f1015;
+      transition: transform 0.4s ease;
+    }
+
+    .gallery-item:hover .gallery-item-img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item-info {
+      padding: 14px 18px;
+    }
+
+    .gallery-item-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: var(--text);
+    }
+
+    .gallery-item-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Модалка Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(14px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+      cursor: zoom-out;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
+      cursor: default;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 25px;
+      right: 30px;
+      font-size: 2.2rem;
+      color: #fff;
+      cursor: pointer;
+    }
+
     @media (max-width: 1050px) {
-      .hud-wrapper {
+      #tab-home {
         flex-direction: column;
         justify-content: center;
-        padding: 30px 16px;
+        padding: 100px 16px 40px;
         gap: 25px;
       }
       .hud-col {
@@ -276,10 +434,16 @@
 </head>
 <body>
 
-  <!-- WebGL Шейдер черной дыры Гаргантюа -->
   <canvas id="webgl-canvas"></canvas>
 
-  <div class="hud-wrapper">
+  <!-- Навигация -->
+  <nav class="top-nav-bar">
+    <button class="nav-btn active" onclick="switchTab('home')">Главная</button>
+    <button class="nav-btn" onclick="switchTab('gallery')">Галерея</button>
+  </nav>
+
+  <!-- ВКЛАДКА: ГЛАВНАЯ -->
+  <main id="tab-home" class="tab-content active">
     <div class="hud-col float-left">
       <div class="glass-card">
         <div class="tag">
@@ -295,12 +459,12 @@
 
       <div class="glass-card pet-panel">
         <div class="pet-img-box">
-          <img src="pets.jpg" alt="Тая и Плюша" />
+          <img src="images/IMG_0941.jpg" alt="Тая и Плюша" onerror="this.src='IMG_0941.jpg'" />
           <div class="pet-overlay"></div>
         </div>
         <div class="pet-caption">
           <div class="pet-name">Тая и Плюша</div>
-          <div class="pet-sub">Мои любимые компаньоны</div>
+          <div class="pet-sub">Мои любимые напарники</div>
         </div>
       </div>
     </div>
@@ -325,15 +489,93 @@
         </footer>
       </div>
     </div>
+  </main>
+
+  <!-- ВКЛАДКА: ГАЛЕРЕЯ -->
+  <main id="tab-gallery" class="tab-content">
+    <div class="gallery-header">
+      <h1>Фотогалерея</h1>
+      <p>Снимки, моменты и пушистые напарники</p>
+    </div>
+
+    <!-- Контейнер для фото -->
+    <div class="gallery-grid" id="gallery-container"></div>
+  </main>
+
+  <!-- Лайтбокс модалка -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="" alt="Full view" onclick="event.stopPropagation()" />
   </div>
 
   <script>
+    // Массив ваших сконвертированных JPG файлов
+    const photos = [
+      { file: "IMG_0941.jpg", title: "Тая и Плюша", desc: "Главные напарники" },
+      { file: "IMG_1137.jpg", title: "Момент #1137", desc: "Ламповый кадр" },
+      { file: "IMG_1173.jpg", title: "Момент #1173", desc: "Уютная атмосфера" },
+      { file: "IMG_1198.jpg", title: "Момент #1198", desc: "Кодинг и отдых" },
+      { file: "IMG_1282.jpg", title: "Момент #1282", desc: "Питомец в фокусе" },
+      { file: "IMG_2371.jpg", title: "Момент #2371", desc: "Зимние моменты" },
+      { file: "IMG_2607.jpg", title: "Момент #2607", desc: "Вайбкодинг вечер" },
+      { file: "IMG_3996.jpg", title: "Момент #3996", desc: "Весенний день" },
+      { file: "IMG_4422.jpg", title: "Момент #4422", desc: "Хороший ракурс" }
+    ];
+
+    // Динамический рендеринг сетки
+    const container = document.getElementById('gallery-container');
+    photos.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'gallery-item';
+      
+      const primaryPath = `images/${item.file}`;
+      const fallbackPath = item.file; // на случай если залили в корень
+
+      card.onclick = () => openLightbox(primaryPath);
+      card.innerHTML = `
+        <img class="gallery-item-img" 
+             src="${primaryPath}" 
+             alt="${item.title}" 
+             loading="lazy" 
+             onerror="if(this.src!=='${fallbackPath}') this.src='${fallbackPath}';" />
+        <div class="gallery-item-info">
+          <div class="gallery-item-title">${item.title}</div>
+          <div class="gallery-item-desc">${item.desc}</div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // Навигация между главной и галереей
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+      if (tabId === 'home') {
+        document.getElementById('tab-home').classList.add('active');
+        document.querySelectorAll('.nav-btn')[0].classList.add('active');
+      } else if (tabId === 'gallery') {
+        document.getElementById('tab-gallery').classList.add('active');
+        document.querySelectorAll('.nav-btn')[1].classList.add('active');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Лайтбокс
+    function openLightbox(src) {
+      const lb = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      img.src = src;
+      lb.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+
+    // WebGL шейдер сингулярности
     const canvas = document.getElementById('webgl-canvas');
     const gl = canvas.getContext('webgl');
-
-    if (!gl) {
-      console.error('WebGL not supported');
-    }
 
     const vsSource = `
       attribute vec2 position;
@@ -342,7 +584,6 @@
       }
     `;
 
-    // Шейдер рендерит физическую чёрную дыру с релятивистским диском и шумом плазмы
     const fsSource = `
       precision highp float;
       uniform vec2 u_resolution;
@@ -373,8 +614,6 @@
 
       void main() {
         vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-
-        // Наклон аккреционного диска
         float tilt = 0.38;
         float rot = -0.12;
         mat2 m = mat2(cos(rot), -sin(rot), sin(rot), cos(rot));
@@ -383,39 +622,31 @@
         float r = length(uv);
         float horizonRadius = 0.22;
 
-        // Искривление световых лучей (гравитационное линзирование)
         float bend = 0.045 / (r - horizonRadius + 0.03);
         vec2 bentUv = uv * (1.0 - bend);
 
-        // Координаты аккреционного диска
         vec2 diskUv = vec2(bentUv.x, bentUv.y / tilt);
         float rDisk = length(diskUv);
         float angle = atan(diskUv.y, diskUv.x);
 
-        // Вращение плазмы (плавное, кинематографичное)
         float gasSpeed = u_time * 0.18;
         float gasAngle = angle - gasSpeed * (horizonRadius / (rDisk + 0.05));
         vec2 gasCoord = vec2(rDisk * 4.0, gasAngle * 2.5);
         float gasDensity = fbm(gasCoord);
 
-        // Профиль яркости аккреционного диска
         float disk = smoothstep(0.24, 0.45, rDisk) * smoothstep(0.95, 0.42, rDisk);
         disk *= (0.6 + 0.6 * gasDensity);
 
-        // Верхнее линзирование (обратная сторона диска над дырой)
         float topLensing = smoothstep(0.24, 0.32, r) * smoothstep(0.48, 0.30, r);
         float topMask = smoothstep(-0.02, 0.2, uv.y);
         topLensing *= topMask * (0.6 + 0.5 * fbm(vec2(r * 5.0, angle * 2.0 - gasSpeed * 0.5)));
 
-        // Палитра разогретой материи (Чёрный -> Тёмно-красный -> Оранжевый -> Белый)
         vec3 colBlack = vec3(0.0, 0.0, 0.02);
         vec3 colRed   = vec3(0.7, 0.12, 0.02);
         vec3 colGold  = vec3(1.0, 0.62, 0.15);
         vec3 colWhite = vec3(1.0, 0.96, 0.85);
 
         float totalIntensity = disk * 1.5 + topLensing * 1.2;
-
-        // Релятивистское доплеровское усиление (левая сторона летит на нас и ярче)
         float doppler = 1.0 - uv.x * 0.9;
         totalIntensity *= clamp(doppler, 0.4, 2.0);
 
@@ -423,15 +654,12 @@
         color = mix(color, colGold, clamp((totalIntensity - 0.45) * 1.6, 0.0, 1.0));
         color = mix(color, colWhite, clamp((totalIntensity - 0.9) * 2.2, 0.0, 1.0));
 
-        // Фотонное кольцо вокруг горизонта
         float photonRing = exp(-pow((r - horizonRadius) * 65.0, 2.0));
         color += colWhite * photonRing * 1.4;
 
-        // Фоновое рассеивание
         float corona = 0.035 / (r * 1.2);
         color += vec3(0.3, 0.12, 0.03) * corona;
 
-        // Абсолютная тень сингулярности (Горизонт событий)
         if (r < horizonRadius) {
           float edgeSmooth = smoothstep(horizonRadius, horizonRadius - 0.005, r);
           color = mix(color, vec3(0.0), edgeSmooth);
@@ -445,11 +673,6 @@
       const shader = gl.createShader(type);
       gl.shaderSource(shader, source);
       gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error(gl.getShaderInfoLog(shader));
-        gl.deleteShader(shader);
-        return null;
-      }
       return shader;
     }
 
@@ -467,12 +690,8 @@
     const buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-      -1, -1,
-       1, -1,
-      -1,  1,
-      -1,  1,
-       1, -1,
-       1,  1
+      -1, -1,  1, -1, -1,  1,
+      -1,  1,  1, -1,  1,  1
     ]), gl.STATIC_DRAW);
 
     function resize() {
