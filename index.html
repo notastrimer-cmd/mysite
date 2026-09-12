@@ -6,13 +6,15 @@
   <title>artemchik.site</title>
   <style>
     :root {
-      --bg: #000002;
-      --card-bg: rgba(10, 10, 16, 0.65);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(245, 158, 11, 0.4);
-      --accent: #f59e0b;
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
+      --bg-color: #1e1f22;
+      --card-bg: #2b2d30;
+      --accent-color: #7b61ff;
+      --accent-hover: #9b87ff;
+      --text-main: #f0f3f6;
+      --text-muted: #9aa0a6;
+      --border-color: #393b40;
+      --badge-bg: rgba(123, 97, 255, 0.2);
+      --badge-color: #bfaaff;
     }
 
     * {
@@ -22,703 +24,237 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    #webgl-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Верхняя навигация */
-    .top-nav-bar {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 50;
-      display: flex;
-      gap: 8px;
-      background: rgba(10, 10, 16, 0.85);
-      border: 1px solid var(--card-border);
-      padding: 6px;
-      border-radius: 30px;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .nav-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.88rem;
-      padding: 8px 22px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.25s ease;
-    }
-
-    .nav-btn.active {
-      background: rgba(245, 158, 11, 0.2);
-      color: #fed7aa;
-      border: 1px solid rgba(245, 158, 11, 0.4);
-    }
-
-    .nav-btn:hover:not(.active) {
-      color: #fff;
-    }
-
-    /* Контейнеры страниц */
-    .tab-content {
-      display: none;
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      padding-top: 85px;
-    }
-
-    .tab-content.active {
-      display: flex;
-    }
-
-    /* Главная страница */
-    #tab-home {
-      justify-content: space-between;
-      align-items: center;
-      padding-left: 70px;
-      padding-right: 70px;
-      padding-bottom: 50px;
-      gap: 40px;
-    }
-
-    .hud-col {
-      width: 390px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
       display: flex;
       flex-direction: column;
-      gap: 22px;
-      flex-shrink: 0;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
     }
 
-    .float-left {
-      animation: smoothFloatA 15s ease-in-out infinite alternate;
+    .container {
+      max-width: 700px;
+      width: 100%;
     }
 
-    .float-right {
-      animation: smoothFloatB 17s ease-in-out infinite alternate;
-    }
-
-    @keyframes smoothFloatA {
-      0% { transform: translateY(0px); }
-      100% { transform: translateY(-14px); }
-    }
-
-    @keyframes smoothFloatB {
-      0% { transform: translateY(-6px); }
-      100% { transform: translateY(10px); }
-    }
-
-    .glass-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 24px;
-      padding: 24px;
-      backdrop-filter: blur(20px) saturate(130%);
-      -webkit-backdrop-filter: blur(20px) saturate(130%);
-      box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.85),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      transition: all 0.35s ease;
-    }
-
-    .glass-card:hover {
-      border-color: var(--card-hover);
-      box-shadow: 0 25px 50px -10px rgba(245, 158, 11, 0.18),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    header {
+      text-align: center;
+      margin-bottom: 35px;
     }
 
     .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(245, 158, 11, 0.12);
-      color: #fed7aa;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      padding: 5px 14px;
+      display: inline-block;
+      background: rgba(123, 97, 255, 0.15);
+      color: var(--accent-hover);
+      border: 1px solid var(--accent-color);
+      padding: 6px 14px;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: 0.6px;
-      margin-bottom: 14px;
-    }
-
-    .tag-pulse {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 8px #22c55e;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
     }
 
     h1 {
-      font-size: 2rem;
-      line-height: 1.25;
+      font-size: 2.2rem;
+      line-height: 1.3;
+      margin-bottom: 14px;
       font-weight: 800;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, #ffffff 40%, #ffedd5 80%, #fed7aa 100%);
+      background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
     }
 
     .bio {
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       line-height: 1.6;
       color: var(--text-muted);
     }
 
-    .pet-panel {
-      padding: 0;
-      overflow: hidden;
+    .pets-section {
+      margin-bottom: 40px;
     }
 
-    .pet-img-box {
+    .pet-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      transition: transform 0.25s ease, border-color 0.25s ease;
+    }
+
+    .pet-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-color);
+    }
+
+    .pet-img-wrap {
       width: 100%;
-      height: 240px;
-      position: relative;
-      background: #000;
+      height: 420px;
       overflow: hidden;
+      background: #141416;
     }
 
-    .pet-img-box img {
+    .pet-img-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
-      transition: transform 0.6s ease;
+      transition: transform 0.3s ease;
     }
 
-    .pet-panel:hover .pet-img-box img {
-      transform: scale(1.04);
+    .pet-card:hover .pet-img-wrap img {
+      transform: scale(1.02);
     }
 
-    .pet-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(10, 10, 16, 0.95) 0%, transparent 60%);
-    }
-
-    .pet-caption {
-      padding: 16px 22px;
+    .pet-info {
+      padding: 18px 22px;
     }
 
     .pet-name {
-      font-size: 1.12rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
     }
 
-    .pet-sub {
-      font-size: 0.86rem;
+    .pet-desc {
       color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
-    .section-label {
-      font-size: 1.25rem;
+    .projects-section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      margin-bottom: 16px;
       font-weight: 700;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
     }
 
-    .section-label::before {
-      content: '';
-      width: 4px;
-      height: 18px;
-      border-radius: 4px;
-      background: #f59e0b;
-      box-shadow: 0 0 10px #f59e0b;
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .project-link {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 18px 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      color: var(--text-main);
       text-decoration: none;
-      color: var(--text);
-      padding: 20px 22px;
+      font-weight: 500;
+      transition: all 0.2s ease;
     }
 
     .project-link:hover {
-      transform: translateX(-5px);
+      border-color: var(--accent-color);
+      background: #32353a;
+      transform: translateX(4px);
     }
 
-    .project-title-row {
+    .project-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
-    .project-title {
+    .project-meta h3 {
       font-size: 1.05rem;
-      font-weight: 600;
     }
 
-    .project-desc {
-      font-size: 0.86rem;
+    .project-meta p {
+      font-size: 0.88rem;
       color: var(--text-muted);
     }
 
     .badge {
-      font-size: 0.73rem;
+      display: inline-block;
+      font-size: 0.75rem;
       padding: 2px 8px;
-      border-radius: 12px;
-      background: rgba(245, 158, 11, 0.18);
-      color: #ffedd5;
-      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 6px;
+      background: var(--badge-bg);
+      color: var(--badge-color);
+      border: 1px solid rgba(123, 97, 255, 0.4);
       font-weight: 600;
     }
 
     .arrow {
-      font-size: 1.3rem;
-      color: #f59e0b;
-      transition: transform 0.25s ease;
-      margin-left: 12px;
+      font-size: 1.2rem;
+      color: var(--accent-hover);
+      transition: transform 0.2s ease;
+      margin-left: 16px;
     }
 
     .project-link:hover .arrow {
-      transform: translateX(5px);
-      color: #fff;
+      transform: translateX(4px);
     }
 
     footer {
-      font-size: 0.8rem;
-      color: rgba(148, 163, 184, 0.5);
       text-align: center;
-      padding: 8px;
-    }
-
-    /* Вкладка Галерея */
-    #tab-gallery {
-      flex-direction: column;
-      align-items: center;
-      padding: 100px 24px 60px;
-      width: 100%;
-      max-width: 1300px;
-      margin: 0 auto;
-    }
-
-    .gallery-header {
-      text-align: center;
-      margin-bottom: 35px;
-    }
-
-    .gallery-header p {
       color: var(--text-muted);
-      margin-top: 6px;
-    }
-
-    .gallery-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 22px;
-      width: 100%;
-    }
-
-    .gallery-item {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-
-    .gallery-item:hover {
-      transform: translateY(-6px);
-      border-color: var(--card-hover);
-      box-shadow: 0 15px 35px rgba(245, 158, 11, 0.18);
-    }
-
-    .gallery-item-img {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-      display: block;
-      background: #0f1015;
-      transition: transform 0.4s ease;
-    }
-
-    .gallery-item:hover .gallery-item-img {
-      transform: scale(1.05);
-    }
-
-    .gallery-item-info {
-      padding: 14px 18px;
-    }
-
-    .gallery-item-title {
-      font-size: 0.98rem;
-      font-weight: 600;
-      margin-bottom: 3px;
-      color: var(--text);
-    }
-
-    .gallery-item-desc {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    /* Модалка Lightbox */
-    .lightbox {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.92);
-      backdrop-filter: blur(14px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 20px;
-      cursor: zoom-out;
-    }
-
-    .lightbox img {
-      max-width: 90vw;
-      max-height: 85vh;
-      border-radius: 12px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
-      cursor: default;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 25px;
-      right: 30px;
-      font-size: 2.2rem;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    @media (max-width: 1050px) {
-      #tab-home {
-        flex-direction: column;
-        justify-content: center;
-        padding: 100px 16px 40px;
-        gap: 25px;
-      }
-      .hud-col {
-        width: 100%;
-        max-width: 500px;
-      }
-      .float-left, .float-right {
-        animation: none;
-      }
+      font-size: 0.85rem;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
     }
   </style>
 </head>
 <body>
 
-  <canvas id="webgl-canvas"></canvas>
+  <div class="container">
+    <header>
+      <span class="tag">artemchik.site</span>
+      <h1>Привет! Меня зовут Артём</h1>
+      <p class="bio">
+        Я люблю вайбкодинг, PyCharm и свою кошку Таю и собачку Плюшу. 
+        Ниже мои проекты, ссылка прямая.
+      </p>
+    </header>
 
-  <!-- Навигация -->
-  <nav class="top-nav-bar">
-    <button class="nav-btn active" onclick="switchTab('home')">Главная</button>
-    <button class="nav-btn" onclick="switchTab('gallery')">Галерея</button>
-  </nav>
-
-  <!-- ВКЛАДКА: ГЛАВНАЯ -->
-  <main id="tab-home" class="tab-content active">
-    <div class="hud-col float-left">
-      <div class="glass-card">
-        <div class="tag">
-          <span class="tag-pulse"></span>
-          artemchik.site
+    <section class="pets-section">
+      <div class="pet-card">
+        <div class="pet-img-wrap">
+          <img src="pets.jpg" alt="Тая и Плюша" />
         </div>
-        <h1>Привет! Я Артём</h1>
-        <p class="bio">
-          Занимаюсь вайбкодингом, разработкой в PyCharm. 
-          Мои проекты доступны на панели справа.
-        </p>
-      </div>
-
-      <div class="glass-card pet-panel">
-        <div class="pet-img-box">
-          <img src="images/IMG_0941.jpg" alt="Тая и Плюша" onerror="this.src='IMG_0941.jpg'" />
-          <div class="pet-overlay"></div>
-        </div>
-        <div class="pet-caption">
+        <div class="pet-info">
           <div class="pet-name">Тая и Плюша</div>
-          <div class="pet-sub">Мои любимые напарники</div>
+          <div class="pet-desc">Мои домашние питомцы</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div class="hud-col float-right">
-      <div class="section-label">Проекты</div>
-
-      <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="glass-card project-link">
-        <div>
-          <div class="project-title-row">
-            <div class="project-title">Премиум автокликер</div>
-            <span class="badge">1 мс</span>
+    <section class="projects-section">
+      <h2 class="section-title">Мои проекты</h2>
+      <div class="projects-list">
+        
+        <a href="https://drive.google.com/uc?export=download&id=1AzlP3jBcjbiMF32rsLNrUstv4zupoUYi" target="_blank" rel="noopener noreferrer" class="project-link">
+          <div class="project-meta">
+            <div class="project-header">
+              <h3>Премиум автокликер</h3>
+              <span class="badge">Точность 1 мс</span>
+            </div>
+            <p>Прямое скачивание с Google Drive</p>
           </div>
-          <div class="project-desc">Прямое скачивание с Google Drive</div>
-        </div>
-        <span class="arrow">&rarr;</span>
-      </a>
+          <span class="arrow">&rarr;</span>
+        </a>
 
-      <div class="glass-card">
-        <footer>
-          artemchik.site &bull; Singularity Engine
-        </footer>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- ВКЛАДКА: ГАЛЕРЕЯ -->
-  <main id="tab-gallery" class="tab-content">
-    <div class="gallery-header">
-      <h1>Фотогалерея</h1>
-      <p>Снимки, моменты и пушистые напарники</p>
-    </div>
-
-    <!-- Контейнер для фото -->
-    <div class="gallery-grid" id="gallery-container"></div>
-  </main>
-
-  <!-- Лайтбокс модалка -->
-  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close">&times;</span>
-    <img id="lightbox-img" src="" alt="Full view" onclick="event.stopPropagation()" />
+    <footer>
+      artemchik.site
+    </footer>
   </div>
 
-  <script>
-    // Массив ваших сконвертированных JPG файлов
-    const photos = [
-      { file: "IMG_0941.jpg", title: "Тая и Плюша", desc: "Главные напарники" },
-      { file: "IMG_1137.jpg", title: "Момент #1137", desc: "Ламповый кадр" },
-      { file: "IMG_1173.jpg", title: "Момент #1173", desc: "Уютная атмосфера" },
-      { file: "IMG_1198.jpg", title: "Момент #1198", desc: "Кодинг и отдых" },
-      { file: "IMG_1282.jpg", title: "Момент #1282", desc: "Питомец в фокусе" },
-      { file: "IMG_2371.jpg", title: "Момент #2371", desc: "Зимние моменты" },
-      { file: "IMG_2607.jpg", title: "Момент #2607", desc: "Вайбкодинг вечер" },
-      { file: "IMG_3996.jpg", title: "Момент #3996", desc: "Весенний день" },
-      { file: "IMG_4422.jpg", title: "Момент #4422", desc: "Хороший ракурс" }
-    ];
-
-    // Динамический рендеринг сетки
-    const container = document.getElementById('gallery-container');
-    photos.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'gallery-item';
-      
-      const primaryPath = `images/${item.file}`;
-      const fallbackPath = item.file; // на случай если залили в корень
-
-      card.onclick = () => openLightbox(primaryPath);
-      card.innerHTML = `
-        <img class="gallery-item-img" 
-             src="${primaryPath}" 
-             alt="${item.title}" 
-             loading="lazy" 
-             onerror="if(this.src!=='${fallbackPath}') this.src='${fallbackPath}';" />
-        <div class="gallery-item-info">
-          <div class="gallery-item-title">${item.title}</div>
-          <div class="gallery-item-desc">${item.desc}</div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-
-    // Навигация между главной и галереей
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-
-      if (tabId === 'home') {
-        document.getElementById('tab-home').classList.add('active');
-        document.querySelectorAll('.nav-btn')[0].classList.add('active');
-      } else if (tabId === 'gallery') {
-        document.getElementById('tab-gallery').classList.add('active');
-        document.querySelectorAll('.nav-btn')[1].classList.add('active');
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Лайтбокс
-    function openLightbox(src) {
-      const lb = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = src;
-      lb.style.display = 'flex';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-    }
-
-    // WebGL шейдер сингулярности
-    const canvas = document.getElementById('webgl-canvas');
-    const gl = canvas.getContext('webgl');
-
-    const vsSource = `
-      attribute vec2 position;
-      void main() {
-        gl_Position = vec4(position, 0.0, 1.0);
-      }
-    `;
-
-    const fsSource = `
-      precision highp float;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-
-      float hash(vec2 p) {
-        return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-      }
-
-      float noise(vec2 p) {
-        vec2 i = floor(p);
-        vec2 f = fract(p);
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(mix(hash(i + vec2(0.0,0.0)), hash(i + vec2(1.0,0.0)), u.x),
-                   mix(hash(i + vec2(0.0,1.0)), hash(i + vec2(1.0,1.0)), u.x), u.y);
-      }
-
-      float fbm(vec2 p) {
-        float v = 0.0;
-        float a = 0.5;
-        for (int i = 0; i < 4; i++) {
-          v += a * noise(p);
-          p = p * 2.0;
-          a *= 0.5;
-        }
-        return v;
-      }
-
-      void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.x, u_resolution.y);
-        float tilt = 0.38;
-        float rot = -0.12;
-        mat2 m = mat2(cos(rot), -sin(rot), sin(rot), cos(rot));
-        uv = m * uv;
-
-        float r = length(uv);
-        float horizonRadius = 0.22;
-
-        float bend = 0.045 / (r - horizonRadius + 0.03);
-        vec2 bentUv = uv * (1.0 - bend);
-
-        vec2 diskUv = vec2(bentUv.x, bentUv.y / tilt);
-        float rDisk = length(diskUv);
-        float angle = atan(diskUv.y, diskUv.x);
-
-        float gasSpeed = u_time * 0.18;
-        float gasAngle = angle - gasSpeed * (horizonRadius / (rDisk + 0.05));
-        vec2 gasCoord = vec2(rDisk * 4.0, gasAngle * 2.5);
-        float gasDensity = fbm(gasCoord);
-
-        float disk = smoothstep(0.24, 0.45, rDisk) * smoothstep(0.95, 0.42, rDisk);
-        disk *= (0.6 + 0.6 * gasDensity);
-
-        float topLensing = smoothstep(0.24, 0.32, r) * smoothstep(0.48, 0.30, r);
-        float topMask = smoothstep(-0.02, 0.2, uv.y);
-        topLensing *= topMask * (0.6 + 0.5 * fbm(vec2(r * 5.0, angle * 2.0 - gasSpeed * 0.5)));
-
-        vec3 colBlack = vec3(0.0, 0.0, 0.02);
-        vec3 colRed   = vec3(0.7, 0.12, 0.02);
-        vec3 colGold  = vec3(1.0, 0.62, 0.15);
-        vec3 colWhite = vec3(1.0, 0.96, 0.85);
-
-        float totalIntensity = disk * 1.5 + topLensing * 1.2;
-        float doppler = 1.0 - uv.x * 0.9;
-        totalIntensity *= clamp(doppler, 0.4, 2.0);
-
-        vec3 color = mix(colBlack, colRed, clamp(totalIntensity * 1.2, 0.0, 1.0));
-        color = mix(color, colGold, clamp((totalIntensity - 0.45) * 1.6, 0.0, 1.0));
-        color = mix(color, colWhite, clamp((totalIntensity - 0.9) * 2.2, 0.0, 1.0));
-
-        float photonRing = exp(-pow((r - horizonRadius) * 65.0, 2.0));
-        color += colWhite * photonRing * 1.4;
-
-        float corona = 0.035 / (r * 1.2);
-        color += vec3(0.3, 0.12, 0.03) * corona;
-
-        if (r < horizonRadius) {
-          float edgeSmooth = smoothstep(horizonRadius, horizonRadius - 0.005, r);
-          color = mix(color, vec3(0.0), edgeSmooth);
-        }
-
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    function createShader(gl, type, source) {
-      const shader = gl.createShader(type);
-      gl.shaderSource(shader, source);
-      gl.compileShader(shader);
-      return shader;
-    }
-
-    const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
-    const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
-    const program = gl.createProgram();
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-
-    const positionLoc = gl.getAttribLocation(program, 'position');
-    const resLoc = gl.getUniformLocation(program, 'u_resolution');
-    const timeLoc = gl.getUniformLocation(program, 'u_time');
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-      -1, -1,  1, -1, -1,  1,
-      -1,  1,  1, -1,  1,  1
-    ]), gl.STATIC_DRAW);
-
-    function resize() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = Math.floor(window.innerWidth * dpr);
-      canvas.height = Math.floor(window.innerHeight * dpr);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    let startTime = performance.now();
-    function render() {
-      const currentTime = (performance.now() - startTime) * 0.001;
-      gl.useProgram(program);
-
-      gl.enableVertexAttribArray(positionLoc);
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.vertexAttribPointer(positionLoc, 2, gl.FLOAT, false, 0, 0);
-
-      gl.uniform2f(resLoc, canvas.width, canvas.height);
-      gl.uniform1f(timeLoc, currentTime);
-
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-      requestAnimationFrame(render);
-    }
-    render();
-  </script>
 </body>
 </html>
